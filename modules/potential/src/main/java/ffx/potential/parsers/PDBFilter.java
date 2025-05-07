@@ -1834,7 +1834,7 @@ public final class PDBFilter extends SystemFilter {
     List<Atom> deuteriumAtoms = new ArrayList<>();
     for(Atom atom: activeMolecularAssembly.getAtomArray()){
       if(atom.getName().startsWith("D")){
-        String name = atom.getName().replace("D","H");
+        String name = atom.getName().replaceFirst("D","H");
         atom.setName(name);
         deuteriumAtoms.add(atom);
       }
@@ -1846,7 +1846,7 @@ public final class PDBFilter extends SystemFilter {
 
     for(Atom atom: activeMolecularAssembly.getAtomArray()){
       if(deuteriumAtoms.contains(atom) && atom.getName().startsWith("H")){
-        String name = atom.getName().replace("H","D");
+        String name = atom.getName().replaceFirst("H","D");
         atom.setName(name);
       }
     }
@@ -2300,7 +2300,7 @@ public final class PDBFilter extends SystemFilter {
     List<Atom> deuteriumAtoms = new ArrayList<>();
     for(Atom atom: activeMolecularAssembly.getAtomArray()){
       if(atom.getName().startsWith("D")){
-        String name = atom.getName().replace("D","H");
+        String name = atom.getName().replaceFirst("D","H");
         atom.setName(name);
         deuteriumAtoms.add(atom);
       }
@@ -2312,7 +2312,7 @@ public final class PDBFilter extends SystemFilter {
 
     for(Atom atom: activeMolecularAssembly.getAtomArray()){
       if(deuteriumAtoms.contains(atom) && atom.getName().startsWith("H")){
-        String name = atom.getName().replace("H","D");
+        String name = atom.getName().replaceFirst("H","D");
         atom.setName(name);
       }
     }
