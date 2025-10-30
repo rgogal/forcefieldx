@@ -7,11 +7,14 @@
     <pluginManagement>
       <!-- Explicitly define plugins for FFX module pom.xml files. -->
       <plugins>
+        <!-- Group: io.github.git-commit-id -->
         <plugin>
-          <groupId>org.asciidoctor</groupId>
-          <artifactId>asciidoctor-maven-plugin</artifactId>
-          <version>${asciidoc.version}</version>
+          <groupId>io.github.git-commit-id</groupId>
+          <artifactId>git-commit-id-maven-plugin</artifactId>
+          <version>${git-commit-id.version}</version>
         </plugin>
+
+        <!-- Group: org.apache.maven.plugins (default) -->
         <plugin>
           <artifactId>maven-antrun-plugin</artifactId>
           <version>${antrun.version}</version>
@@ -95,11 +98,6 @@
           <version>${install.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <version>${jacoco.version}</version>
-        </plugin>
-        <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>${jar.version}</version>
           <configuration>
@@ -114,11 +112,7 @@
           <artifactId>maven-javadoc-plugin</artifactId>
           <configuration>
             <author>true</author>
-            <defaultAuthor>Michael J. Schnieders</defaultAuthor>
-            <defaultSince>1.0</defaultSince>
             <failOnError>false</failOnError>
-            <quiet>false</quiet>
-            <debug>true</debug>
             <additionalOptions>
               <additionalOption>--add-modules jdk.incubator.vector</additionalOption>
             </additionalOptions>
@@ -142,6 +136,14 @@
         <plugin>
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>${project-info-reports.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>${release.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${resources.version}</version>
         </plugin>
         <plugin>
           <artifactId>maven-scm-plugin</artifactId>
@@ -188,22 +190,25 @@
           <version>${surefire.version}</version>
         </plugin>
         <plugin>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>${release.version}</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>${resources.version}</version>
-        </plugin>
-        <plugin>
           <artifactId>maven-wrapper-plugin</artifactId>
           <version>${wrapper.version}</version>
         </plugin>
+
+        <!-- Group: org.asciidoctor -->
         <plugin>
-          <groupId>io.github.git-commit-id</groupId>
-          <artifactId>git-commit-id-maven-plugin</artifactId>
-          <version>${git-commit-id.version}</version>
+          <groupId>org.asciidoctor</groupId>
+          <artifactId>asciidoctor-maven-plugin</artifactId>
+          <version>${asciidoc.version}</version>
         </plugin>
+
+        <!-- Group: org.codehaus.gmavenplus -->
+        <plugin>
+          <groupId>org.codehaus.gmavenplus</groupId>
+          <artifactId>gmavenplus-plugin</artifactId>
+          <version>${gmavenplus.version}</version>
+        </plugin>
+
+        <!-- Group: org.codehaus.mojo -->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>appassembler-maven-plugin</artifactId>
@@ -229,17 +234,18 @@
           <artifactId>versions-maven-plugin</artifactId>
           <version>${versions.version}</version>
         </plugin>
+
+        <!-- Group: org.jacoco -->
         <plugin>
-          <groupId>org.codehaus.gmavenplus</groupId>
-          <artifactId>gmavenplus-plugin</artifactId>
-          <version>${gmavenplus.version}</version>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>${dependency.version}</version>
         <inherited>false</inherited>
         <executions>
           <execution>
@@ -262,7 +268,7 @@
                 <!-- dependencyConvergence/ -->
                 <!-- reactorModuleConvergence/ -->
                 <requireJavaVersion>
-                  <version>[21,24.1]</version>
+                  <version>[21,26.1]</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
                   <version>3.8</version>
@@ -277,47 +283,20 @@
             <phase>initialize</phase>
           </execution>
         </executions>
-        <version>${enforcer.version}</version>
       </plugin>
-      <!-- plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <configuration>
-              <target>
-                <taskdef classname="org.codehaus.groovy.ant.Groovydoc"
-                  classpathref="maven.compile.classpath"
-                  name="groovydoc"
-                />
-                <groovydoc destdir="${project.reporting.outputDirectory}/groovydoc"
-                  doctitle="${project.name}"
-                  sourcepath="${basedir}/modules/potential/src/main/groovy${path.separator}${basedir}/modules/algorithms/src/main/groovy"
-                  use="true"
-                  windowtitle="${project.name}"
-                />
-              </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <id>groovydoc</id>
-            <phase>site</phase>
-          </execution>
-        </executions>
-        <inherited>false</inherited>
-        <version>${antrun.version}</version>
-      </plugin -->
       <plugin>
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
           <generateSitemap>true</generateSitemap>
+          <moduleExcludes>
+            <moduleExclude>modules/codecov</moduleExclude>
+          </moduleExcludes>
         </configuration>
         <inherited>true</inherited>
-        <version>${site.version}</version>
         <dependencies>
           <dependency>
             <groupId>org.asciidoctor</groupId>
-            <artifactId>asciidoctor-maven-plugin</artifactId>
+            <artifactId>asciidoctor-parser-doxia-module</artifactId>
             <version>${asciidoc.version}</version>
           </dependency>
         </dependencies>
@@ -341,7 +320,6 @@
           </filesets>
         </configuration>
         <inherited>false</inherited>
-        <version>${clean.version}</version>
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -362,7 +340,6 @@
           </execution>
         </executions>
         <inherited>false</inherited>
-        <version>${assembly.version}</version>
       </plugin>
       <plugin>
         <artifactId>exec-maven-plugin</artifactId>
@@ -393,7 +370,6 @@
         </executions>
         <groupId>org.codehaus.mojo</groupId>
         <inherited>false</inherited>
-        <version>${exec.version}</version>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -415,7 +391,6 @@
             <version>${surefire.version}</version>
           </dependency>
         </dependencies>
-        <version>${surefire.version}</version>
       </plugin>
       <!-- plugin>
           <artifactId>maven-pdf-plugin</artifactId>
@@ -437,7 +412,6 @@
       <plugin>
         <groupId>io.github.git-commit-id</groupId>
         <artifactId>git-commit-id-maven-plugin</artifactId>
-        <version>${git-commit-id.version}</version>
         <inherited>false</inherited>
         <executions>
           <execution>
@@ -476,12 +450,10 @@
         </executions>
         <groupId>org.codehaus.mojo</groupId>
         <inherited>false</inherited>
-        <version>${properties.version}</version>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${jacoco.version}</version>
         <configuration>
           <destFile>target/jacoco.exec</destFile>
           <!-- append>true</append -->
@@ -508,7 +480,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
-        <version>${antrun.version}</version>
         <inherited>false</inherited>
         <executions>
           <execution>
@@ -738,9 +709,10 @@
       <version>${groovy-all.version}</version>
     </dependency>
     <dependency>
-      <artifactId>jsr305</artifactId>
-      <groupId>com.google.code.findbugs</groupId>
-      <version>${findbugs.version}</version>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+      <version>${spotbugs.version}</version>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.graalvm.polyglot</groupId>
@@ -921,7 +893,6 @@
       </roles>
       <timezone>-5</timezone>
     </developer>
-
   </developers>
   <distributionManagement>
     <downloadUrl>https://ffx.biochem.uiowa.edu/download.html</downloadUrl>
@@ -1000,9 +971,23 @@
     <url>https://ffx.biochem.uiowa.edu</url>
   </organization>
   <packaging>pom</packaging>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <updatePolicy>daily</updatePolicy>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
   <profiles>
     <profile>
-      <id>graalpy</id>
+      <id>python</id>
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
@@ -1017,20 +1002,12 @@
               <execution>
                 <configuration>
                   <packages>
-                    <package>numpy==1.26.4</package>
-                    <package>torch==2.2.1</package>
+                    <!-- package>torch==2.7.0</package -->
+                    <package>numpy==2.2.4</package>
                   </packages>
-                  <pythonHome>
-	            <includes>
-                      <include>.*</include>
-                    </includes>
-                    <!-- excludes>
-                      <exclude>.*</exclude>
-                    </excludes -->
-                  </pythonHome>
-                  <pythonResourcesDirectory>
+                  <externalDirectory>
                     ${project.basedir}/python-resources
-                  </pythonResourcesDirectory>
+                  </externalDirectory>
                 </configuration>
                 <goals>
                   <goal>process-graalpy-resources</goal>
@@ -1055,90 +1032,85 @@
     <changes.version>2.12.1</changes.version>
     <checkstyle.skip>true</checkstyle.skip>
     <checkstyle.version>3.6.0</checkstyle.version>
-    <ciftools-java.version>7.0.1</ciftools-java.version>
-    <clean.version>3.4.1</clean.version>
+    <ciftools-java.version>7.0.2</ciftools-java.version>
+    <clean.version>3.5.0</clean.version>
     <clover.version>4.4.1</clover.version>
-    <clustering.version>1.2.0</clustering.version>
-    <commons-beanutils.version>1.10.1</commons-beanutils.version>
+    <commons-beanutils.version>1.11.0</commons-beanutils.version>
     <commons-collections4.version>4.4</commons-collections4.version>
-    <commons-configuration2.version>2.11.0</commons-configuration2.version>
-    <commons-io.version>2.19.0</commons-io.version>
-    <commons-lang3.version>3.17.0</commons-lang3.version>
+    <commons-configuration2.version>2.12.0</commons-configuration2.version>
+    <commons-io.version>2.20.0</commons-io.version>
+    <commons-lang3.version>3.19.0</commons-lang3.version>
     <commons-math3.version>3.6.1</commons-math3.version>
-    <commons-text.version>1.13.1</commons-text.version>
+    <commons-text.version>1.14.0</commons-text.version>
     <!-- Control the source version -->
     <compileVersion>21</compileVersion>
-    <compiler.version>3.14.0</compiler.version>
-    <dependency.version>3.8.1</dependency.version>
+    <compiler.version>3.14.1</compiler.version>
+    <dependency.version>3.9.0</dependency.version>
     <dependencyDetails>false</dependencyDetails>
     <deploy.version>3.1.4</deploy.version>
-    <enforcer.version>3.5.0</enforcer.version>
-    <exec.version>3.5.0</exec.version>
+    <enforcer.version>3.6.2</enforcer.version>
+    <exec.version>3.6.1</exec.version>
     <failIfNoTests>false</failIfNoTests>
     <fastutil.version>8.5.12</fastutil.version>
     <!-- Version of FFX  -->
     <ffx.version>1.0.0</ffx.version>
-    <findbugs.version>3.0.2</findbugs.version>
-    <git-commit-id.version>9.0.1</git-commit-id.version>
-    <gmavenplus.version>4.1.1</gmavenplus.version>
-    <graal.version>24.2.1</graal.version>
-    <groovy-all.version>5.0.0-alpha-12</groovy-all.version>
-    <guava.version>33.4.8-jre</guava.version>
+    <git-commit-id.version>9.0.2</git-commit-id.version>
+    <gmavenplus.version>4.2.1</gmavenplus.version>
+    <graal.version>25.0.0</graal.version>
+    <groovy-all.version>5.0.2</groovy-all.version>
+    <guava.version>33.5.0-jre</guava.version>
     <install.version>3.1.4</install.version>
-    <jacoco.version>0.8.13</jacoco.version>
+    <jacoco.version>0.8.14</jacoco.version>
     <jacoco.skip>true</jacoco.skip>
     <jar.version>3.4.2</jar.version>
     <jarsigner.version>3.1.0</jarsigner.version>
-    <javaparser.version>3.26.4</javaparser.version>
-    <java3d.version>1.7.1</java3d.version>
-    <javadoc.version>3.11.2</javadoc.version>
-    <jakarta-xml.version>4.0.2</jakarta-xml.version>
+    <javaparser.version>3.27.1</javaparser.version>
+    <java3d.version>1.7.2</java3d.version>
+    <javadoc.version>3.12.0</javadoc.version>
+    <jakarta-xml.version>4.0.4</jakarta-xml.version>
     <jdepend.version>2.1</jdepend.version>
-    <jna.version>5.17.0</jna.version>
-    <jogamp-fat.version>2.5.0</jogamp-fat.version>
-    <jopenmm.version>8.1.2</jopenmm.version>
+    <jna.version>5.18.1</jna.version>
+    <jogamp-fat.version>2.6.0</jogamp-fat.version>
+    <jopenmm.version>8.3.4</jopenmm.version>
     <junit.version>4.13.2</junit.version>
     <jxr.version>3.6.0</jxr.version>
     <linkcheck.skip>true</linkcheck.skip>
     <linkcheck.version>1.2</linkcheck.version>
-    <log4j.version>2.24.3</log4j.version>
+    <log4j.version>2.25.2</log4j.version>
     <maven.build.timestamp.format>MM-dd-yyyy</maven.build.timestamp.format>
     <maven.javadoc.skip>false</maven.javadoc.skip>
     <maven.jxr.skip>false</maven.jxr.skip>
     <MRJToolkitStubs.version>1.0</MRJToolkitStubs.version>
     <picocli.version>4.7.7</picocli.version>
     <pj.version>1.0.1</pj.version>
-    <pmd.version>3.26.0</pmd.version>
-    <!-- Skip PMD because it does not handle Java language version 23 yet. -->
-    <pmd.skip>true</pmd.skip>
+    <pmd.version>3.28.0</pmd.version>
     <project-info-reports.version>3.9.0</project-info-reports.version>
     <!-- Setting the source encoding is required for builds that are platform independent. -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <properties.version>1.2.1</properties.version>
-    <quickhull3D.version>1.0.0</quickhull3D.version>
     <!-- Default locations for deploying a release (can be over-ridden by settings.xml) -->
     <release.repo>file:release</release.repo>
     <release.version>3.1.1</release.version>
     <resources.version>3.3.1</resources.version>
-    <scm.version>2.1.0</scm.version>
-    <slf4j-nop.version>2.0.17</slf4j-nop.version>
+    <scm.version>2.2.1</scm.version>
     <site.version>3.21.0</site.version>
     <skipSurefireReport>false</skipSurefireReport>
     <skipTests>true</skipTests>
     <!-- Default locations for deploying snapshots (can be over-ridden by settings.xml) -->
     <snapshot.repo>file:lib</snapshot.repo>
     <source.version>3.3.1</source.version>
-    <surefire.version>3.5.3</surefire.version>
+    <spotbugs.version>4.9.7</spotbugs.version>
+    <surefire.version>3.5.4</surefire.version>
     <!-- Control the target JRE version -->
     <targetVersion>21</targetVersion>
     <timestamp>${maven.build.timestamp}</timestamp>
-    <tornado.version>1.0.7</tornado.version>
+    <tornado.version>1.1.0</tornado.version>
     <!-- This is the javax.vecmath version used by CDK -->
     <vecmath.version>1.5.2</vecmath.version>
-    <versions.version>2.18.0</versions.version>
+    <versions.version>2.19.1</versions.version>
     <!-- Default locations for deploying the website (can be over-ridden by settings.xml) -->
     <website.repo>file:website</website.repo>
-    <wrapper.version>3.3.2</wrapper.version>
+    <wrapper.version>3.3.4</wrapper.version>
   </properties>
   <reporting>
     <plugins>
@@ -1245,7 +1217,6 @@
           <minimumTokens>500</minimumTokens>
           <targetJdk>${targetVersion}</targetJdk>
           <typeResolution>true</typeResolution>
-          <aggregate>true</aggregate>
         </configuration>
         <reportSets>
           <reportSet>
@@ -1268,20 +1239,6 @@
       </plugin>
     </plugins>
   </reporting>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>central</id>
-      <name>Central Repository</name>
-      <url>https://repo.maven.apache.org/maven2</url>
-      <layout>default</layout>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <updatePolicy>daily</updatePolicy>
-      </releases>
-    </pluginRepository>
-  </pluginRepositories>
   <repositories>
     <repository>
       <id>1.ffx.repo</id>
@@ -1342,7 +1299,7 @@
     </repository>
     <repository>
       <id>6.u.manchester.repo</id>
-      <name>Tornadovm Repository</name>
+      <name>TornadoVM Repository</name>
       <releases>
         <enabled>true</enabled>
       </releases>

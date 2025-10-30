@@ -55,9 +55,15 @@ import java.util.logging.Logger;
 
 import static ffx.crystal.LatticeSystem.check;
 import static ffx.numerics.math.ScalarMath.mirrorDegrees;
-import static ffx.utilities.Constants.*;
+import static ffx.utilities.Constants.AVOGADRO;
+import static ffx.utilities.Constants.PRESCON;
+import static ffx.utilities.Constants.R;
 import static java.lang.String.format;
-import static org.apache.commons.math3.util.FastMath.*;
+import static org.apache.commons.math3.util.FastMath.exp;
+import static org.apache.commons.math3.util.FastMath.floor;
+import static org.apache.commons.math3.util.FastMath.log;
+import static org.apache.commons.math3.util.FastMath.min;
+import static org.apache.commons.math3.util.FastMath.random;
 
 /**
  * The Barostat class maintains constant pressure using random trial moves in lattice parameters,
@@ -368,6 +374,14 @@ public class Barostat implements CrystalPotential {
    * {@inheritDoc}
    */
   @Override
+  public void setCoordinates(double[] parameters) {
+    potential.setCoordinates(parameters);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public Crystal getCrystal() {
     return potential.getCrystal();
   }
@@ -487,6 +501,15 @@ public class Barostat implements CrystalPotential {
     underlying.add(potential);
     underlying.addAll(potential.getUnderlyingPotentials());
     return underlying;
+  }
+
+  /**
+   * Get the CrystalPotential that this Barostat is applying to.
+   *
+   * @return The CrystalPotential.
+   */
+  public CrystalPotential getCrystalPotential() {
+    return potential;
   }
 
   /**

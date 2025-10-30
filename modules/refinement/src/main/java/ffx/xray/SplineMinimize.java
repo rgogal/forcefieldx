@@ -37,8 +37,6 @@
 // ******************************************************************************
 package ffx.xray;
 
-import static java.lang.System.arraycopy;
-
 import ffx.algorithms.Terminatable;
 import ffx.crystal.ReflectionList;
 import ffx.numerics.optimization.LBFGS;
@@ -49,6 +47,8 @@ import ffx.xray.SplineEnergy.Type;
 import javax.annotation.Nullable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.lang.System.arraycopy;
 
 /**
  * SplineMinimize class.
@@ -101,8 +101,8 @@ public class SplineMinimize implements OptimizationListener, Terminatable {
   /**
    * getCoordinates.
    *
-   * @param x an array of {@link double} objects.
-   * @return an array of {@link double} objects.
+   * @param x the array to populate with parameters or null to create a new array.
+   * @return an array containing the parameters.
    */
   public double[] getCoordinates(@Nullable double[] x) {
     if (x == null) {

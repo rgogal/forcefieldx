@@ -37,13 +37,6 @@
 // ******************************************************************************
 package ffx.xray;
 
-import static java.lang.Double.isNaN;
-import static java.lang.String.format;
-import static java.util.Arrays.fill;
-import static org.apache.commons.math3.util.FastMath.abs;
-import static org.apache.commons.math3.util.FastMath.pow;
-import static org.apache.commons.math3.util.FastMath.sqrt;
-
 import ffx.crystal.Crystal;
 import ffx.crystal.HKL;
 import ffx.crystal.ReflectionList;
@@ -52,6 +45,13 @@ import ffx.numerics.OptimizationInterface;
 import ffx.numerics.math.ComplexNumber;
 
 import java.util.logging.Logger;
+
+import static java.lang.Double.isNaN;
+import static java.lang.String.format;
+import static java.util.Arrays.fill;
+import static org.apache.commons.math3.util.FastMath.abs;
+import static org.apache.commons.math3.util.FastMath.pow;
+import static org.apache.commons.math3.util.FastMath.sqrt;
 
 /**
  * Fit structure factors using spline coefficients
@@ -137,6 +137,14 @@ public class SplineEnergy implements OptimizationInterface {
    */
   @Override
   public double[] getCoordinates(double[] parameters) {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setCoordinates(double[] parameters) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
 

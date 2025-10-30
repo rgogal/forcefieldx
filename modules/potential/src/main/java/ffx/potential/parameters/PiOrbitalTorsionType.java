@@ -41,6 +41,7 @@ import ffx.utilities.FFXProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -114,13 +115,14 @@ public final class PiOrbitalTorsionType extends BaseType implements Comparator<S
    * Average two PiTorsionType instances. The atom classes that define the new type must be
    * supplied.
    *
-   * @param piOrbitalTorsionType1 a {@link PiOrbitalTorsionType} object.
-   * @param piOrbitalTorsionType2 a {@link PiOrbitalTorsionType} object.
-   * @param atomClasses           an array of {@link int} objects.
+   * @param piOrbitalTorsionType1 the first {@link PiOrbitalTorsionType} object.
+   * @param piOrbitalTorsionType2 the second {@link PiOrbitalTorsionType} object.
+   * @param atomClasses           the atom classes that define the new type.
    * @return a {@link PiOrbitalTorsionType} object.
    */
-  public static PiOrbitalTorsionType average(PiOrbitalTorsionType piOrbitalTorsionType1,
-                                             PiOrbitalTorsionType piOrbitalTorsionType2, int[] atomClasses) {
+  public static PiOrbitalTorsionType average(@Nullable PiOrbitalTorsionType piOrbitalTorsionType1,
+                                             @Nullable PiOrbitalTorsionType piOrbitalTorsionType2,
+                                             @Nullable int[] atomClasses) {
     if (piOrbitalTorsionType1 == null || piOrbitalTorsionType2 == null || atomClasses == null) {
       return null;
     }
@@ -308,7 +310,7 @@ public final class PiOrbitalTorsionType extends BaseType implements Comparator<S
     node.setAttribute("class1", format("%d", atomClasses[0]));
     node.setAttribute("class2", format("%d", atomClasses[1]));
     // OpenMM has the piTorsUnit hard coded to 1.0 (the default).
-    node.setAttribute("k", format("%f", forceConstant * KCAL_TO_KJ));
+    node.setAttribute("k", format("%.17f", forceConstant * KCAL_TO_KJ));
     return node;
   }
 

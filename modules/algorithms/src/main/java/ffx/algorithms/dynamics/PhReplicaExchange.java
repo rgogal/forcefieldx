@@ -37,10 +37,6 @@
 // ******************************************************************************
 package ffx.algorithms.dynamics;
 
-import static ffx.utilities.Constants.KCAL_TO_GRAM_ANG2_PER_PS2;
-import static ffx.utilities.Constants.kB;
-import static org.apache.commons.math3.util.FastMath.exp;
-
 import edu.rit.mp.DoubleBuf;
 import edu.rit.mp.IntegerBuf;
 import edu.rit.mp.buf.IntegerMatrixBuf_1;
@@ -48,6 +44,10 @@ import edu.rit.pj.Comm;
 import ffx.algorithms.Terminatable;
 import ffx.numerics.Potential;
 import ffx.potential.extended.ExtendedSystem;
+import ffx.potential.parameters.TitrationUtils;
+import org.apache.commons.io.FilenameUtils;
+
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -61,9 +61,9 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ffx.potential.parameters.TitrationUtils;
-import jline.internal.Nullable;
-import org.apache.commons.io.FilenameUtils;
+import static ffx.utilities.Constants.KCAL_TO_GRAM_ANG2_PER_PS2;
+import static ffx.utilities.Constants.kB;
+import static org.apache.commons.math3.util.FastMath.exp;
 
 /**
  * The PhReplicaExchange implements pH replica exchange. Adapted from "ReplicaExchange.java" by
@@ -401,7 +401,6 @@ public class PhReplicaExchange implements Terminatable {
     done = false;
     terminate = false;
     replica.setRestartFrequency(cycles * (titrSteps + confSteps) * replica.dt + 100); // Full control over restarts handled by this class
-    extendedSystem.reGuessLambdas();
     replica.setCoordinates(x);
     int startCycle = 0;
     if (initDynamics > 0 && !restart) {
@@ -435,6 +434,8 @@ public class PhReplicaExchange implements Terminatable {
       logger.info(" ");
       logger.info(" ------------------End of Equilibration Dynamics------------------\n");
       logger.info(" ");
+    } else if (initDynamics == 0 && !restart){
+      extendedSystem.reGuessLambdas();
     } else if (restart) {
       logger.info(" Omitting initialization steps because this is a restart.");
       startCycle = (int) (restartStep / titrSteps) + 1;
@@ -526,7 +527,12 @@ public class PhReplicaExchange implements Terminatable {
       //Arrays.sort(residueRatios[i]);
 
       // L-BFGS minimization of the Henderson-Hasselbalch equation to find the best fit hill coeff and pKa
-      double[] temp = TitrationUtils.predictHillCoeffandPka(pHScale, residueRatios[i]);
+      // Create Array of pH to match ordering residueRatios
+      double[] pHArray = new double[nReplicas];
+      for(int j=0; j < nReplicas; j++){
+        pHArray[j] = parameters[j][0];
+      }
+      double[] temp = TitrationUtils.predictHillCoeffandPka(pHArray, residueRatios[i]);
       n[i] = temp[0];
       pka[i] = temp[1];
 
@@ -534,7 +540,7 @@ public class PhReplicaExchange implements Terminatable {
       String residueName = extendedSystem.getTitratingResidueList().get(i).toString();
       output.append(" Residue: ").append(residueName).append("\n");
       output.append(" Fractions (Dep / (Dep + Pro)): ").append(Arrays.toString(residueRatios[i])).append("\n");
-      output.append(" pH window: ").append(Arrays.toString(pHScale)).append("\n");
+      output.append(" pH window: ").append(Arrays.toString(pHArray)).append("\n");
       output.append(" n: ").append(n[i]).append("\n");
       output.append(" pKa: ").append(pka[i]).append("\n");
       output.append("\n");
@@ -559,6 +565,15 @@ public class PhReplicaExchange implements Terminatable {
       pHScale[i] = pHMin + i * pHGap;
     }
 
+    return pHScale;
+  }
+
+  /**
+   * Get the pH scale array.
+   *
+   * @return the pH scale array
+   */
+  public double[] getPhScale() {
     return pHScale;
   }
 

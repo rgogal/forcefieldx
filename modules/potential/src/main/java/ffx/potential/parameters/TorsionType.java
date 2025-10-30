@@ -41,6 +41,7 @@ import ffx.utilities.FFXProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -190,18 +191,20 @@ public final class TorsionType extends BaseType implements Comparator<String> {
   }
 
   /**
-   * average.
+   * Average two TorsionTypes.
    *
-   * @param torsionType1 a {@link ffx.potential.parameters.TorsionType} object.
-   * @param torsionType2 a {@link ffx.potential.parameters.TorsionType} object.
-   * @param atomClasses  an array of {@link int} objects.
-   * @return a {@link ffx.potential.parameters.TorsionType} object.
+   * @param torsionType1 First TorsionType.
+   * @param torsionType2 Second TorsionType.
+   * @param atomClasses  Atom classes for the new TorsionType.
+   * @return A new TorsionType that is the average of the two input types, or null if the inputs are invalid.
    */
-  public static TorsionType average(TorsionType torsionType1, TorsionType torsionType2,
-                                    int[] atomClasses) {
+  public static TorsionType average(@Nullable TorsionType torsionType1,
+                                    @Nullable TorsionType torsionType2,
+                                    @Nullable int[] atomClasses) {
     if (torsionType1 == null || torsionType2 == null || atomClasses == null) {
       return null;
     }
+
     int len = torsionType1.amplitude.length;
     if (len != torsionType2.amplitude.length) {
       return null;
@@ -528,9 +531,9 @@ public final class TorsionType extends BaseType implements Comparator<String> {
     node.setAttribute("class4", format("%d", atomClasses[3]));
     for (int i = 0; i < amplitude.length; i++) {
       // Convert from Kcal/mol to KJ/mol
-      node.setAttribute(format("k%d", i + 1), format("%f", amplitude[i] * KCAL_TO_KJ * torsUnit));
+      node.setAttribute(format("k%d", i + 1), format("%.17f", amplitude[i] * KCAL_TO_KJ * torsUnit));
       // Convert from degrees to radians.
-      node.setAttribute(format("phase%d", i + 1), format("%f", phase[i] / DEGREES_PER_RADIAN));
+      node.setAttribute(format("phase%d", i + 1), format("%.17f", phase[i] / DEGREES_PER_RADIAN));
       node.setAttribute(format("periodicity%d", i + 1), format("%d", periodicity[i]));
     }
     return node;

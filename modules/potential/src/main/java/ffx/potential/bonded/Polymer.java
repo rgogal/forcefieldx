@@ -40,7 +40,11 @@ package ffx.potential.bonded;
 import ffx.numerics.math.DoubleMath;
 import ffx.potential.bonded.Residue.ResidueType;
 import ffx.potential.parameters.ForceField;
+import org.jogamp.java3d.BranchGroup;
+import org.jogamp.java3d.Material;
+import org.jogamp.vecmath.Color3f;
 
+import javax.swing.tree.TreeNode;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -48,10 +52,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import javax.swing.tree.TreeNode;
-import org.jogamp.java3d.BranchGroup;
-import org.jogamp.java3d.Material;
-import org.jogamp.vecmath.Color3f;
 
 /**
  * The Polymer class encapsulates a peptide or nucleotide chain.
@@ -205,9 +205,12 @@ public class Polymer extends MSGroup {
   }
 
   /**
-   * {@inheritDoc}
+   * Form a Joint between two residues.
    *
-   * <p>Joiner joins Moieties m1 and m2 and returns the Geometry objects formed in a Joint.
+   * @param residue1 The first Residue.
+   * @param residue2 The second Residue.
+   * @param forceField The ForceField to use for the Joint.
+   * @return a {@link ffx.potential.bonded.Joint} object.
    */
   public Joint createJoint(Residue residue1, Residue residue2, ForceField forceField) {
     Joint joint = null;

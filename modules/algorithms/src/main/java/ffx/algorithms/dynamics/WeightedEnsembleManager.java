@@ -2,21 +2,26 @@ package ffx.algorithms.dynamics;
 
 import edu.rit.mp.DoubleBuf;
 import edu.rit.pj.Comm;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import ffx.numerics.Potential;
 import ffx.potential.MolecularAssembly;
 import ffx.potential.utils.PotentialsUtils;
-import ffx.potential.utils.ProgressiveAlignmentOfCrystals;
 import ffx.potential.utils.StructureMetrics;
 import ffx.potential.utils.Superpose;
 import org.apache.commons.configuration2.CompositeConfiguration;
 import org.apache.commons.io.FilenameUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class implements the Weighted Ensemble algorithm. Simulations are ran in parallel with weights
@@ -29,14 +34,13 @@ import org.apache.commons.io.FilenameUtils;
  * configurations in the same bin. The configurations with the highest weights are split into two
  * configurations with half the weight of the parent.
  * <p>
- * The algorithm is based on the Huber & Kim original paper and a following theory paper by Zuckerman:
+ * The algorithm is based on the Huber and Kim original paper and the following paper by Zuckerman:
  * <p>
- * Huber, G. A., & Kim, S. (1996). Weighted-ensemble Brownian dynamics simulations for protein association reactions.
+ * Huber, G. A., and Kim, S. (1996). Weighted-ensemble Brownian dynamics simulations for protein association reactions.
  * Biophysical journal, 70, 97-110.
  * <p>
  * Zuckerman, D. M. (2010). The "Weighted Ensemble" path sampling method is statistically exact for a broad class of
  * stochastic processes and binning procedures. The Journal of Chemical Physics, 132.
- *
  *
  * @author Matthew Speranza
  * @since 1.0
@@ -354,23 +358,23 @@ public class WeightedEnsembleManager {
     private void resample(){
         logger.info("\n\n ----------------------------- Resampling ----------------------------- ");
         // Initialize
-        ArrayList<Integer>[] binRank = new ArrayList[numBins];
+        List<List<Integer>> binRank = new ArrayList<>();
         PriorityQueue<Decision> merges = new PriorityQueue<>(); // Head is the lowest weight for priority queues
         PriorityQueue<Decision> splits = new PriorityQueue<>();
         for (int i = 0; i < numBins; i++){
-            binRank[i] = new ArrayList<>();
+            binRank.add(new ArrayList<>());
         }
 
         // Sort ranks into bins
         for (int i = 0; i < worldSize; i++){
             int bin = (int) Math.round(weightsBins[i][1]);
-            binRank[bin].add(i);
+            binRank.get(bin).add(i);
         }
 
         // Analyze each bin
         int m = 2;  // Number of particles to split into (default 2 -- must be > 1)
         for (int i = 0; i < numBins; i++){
-            List<Integer> ranks = binRank[i]
+            List<Integer> ranks = binRank.get(i)
                     .stream()
                     .sorted((a, b) -> Double.compare(weightsBins[a][0], weightsBins[b][0]))
                     .toList();
@@ -454,7 +458,8 @@ public class WeightedEnsembleManager {
             }
             desiredFreeRanks -= decision.ranks.size()-1;
             // Sample a rank to merge into from all ranks in the decision to find target
-            ArrayList<Double> weights = (ArrayList<Double>) decision.weights.clone();
+
+            ArrayList<Double> weights = new ArrayList<>(decision.weights);
             double totalWeight = weights.stream().mapToDouble(Double::doubleValue).sum();
             weights.replaceAll(a -> a /totalWeight);
             double rand = random.nextDouble();

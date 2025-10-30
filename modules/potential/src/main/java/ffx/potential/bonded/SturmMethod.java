@@ -37,21 +37,22 @@
 // ******************************************************************************
 package ffx.potential.bonded;
 
-import static java.lang.String.format;
-import static java.lang.System.arraycopy;
-import static org.apache.commons.math3.util.FastMath.abs;
-import static org.apache.commons.math3.util.FastMath.exp;
-import static org.apache.commons.math3.util.FastMath.max;
-
 import ffx.potential.MolecularAssembly;
 import ffx.potential.parsers.PDBFilter;
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.FilenameUtils;
+
+import static java.lang.String.format;
+import static java.lang.System.arraycopy;
+import static org.apache.commons.math3.util.FastMath.abs;
+import static org.apache.commons.math3.util.FastMath.exp;
+import static org.apache.commons.math3.util.FastMath.max;
 
 /**
  * SturmMethod class.
@@ -146,8 +147,8 @@ public class SturmMethod {
    * Solve using the Sturm method.
    *
    * @param order the order of the polynomial.
-   * @param poly_coeffs an array of {@link double} objects.
-   * @param roots an array of {@link double} objects.
+   * @param poly_coeffs the coefficients of the polynomial.
+   * @param roots the array to hold the roots.
    */
   public int solveSturm(int order, double[] poly_coeffs, double[] roots) {
     Polynomial[] sseq = new Polynomial[Polynomial.MAX_ORDER * 2];
@@ -246,9 +247,9 @@ public class SturmMethod {
   /**
    * Write out loop coordinates and determine oxygen placement.
    *
-   * @param r_n an array of {@link double} objects.
-   * @param r_a an array of {@link double} objects.
-   * @param r_c an array of {@link double} objects.
+   * @param r_n the coordinates of the nitrogen atoms.
+   * @param r_a the coordinates of the alpha carbon atoms.
+   * @param r_c the coordinates of the carbonyl carbon atoms.
    * @param stt_res a int.
    * @param end_res a int.
    * @param molAss a {@link ffx.potential.MolecularAssembly} object.

@@ -37,16 +37,17 @@
 // ******************************************************************************
 package ffx.potential.nonbonded;
 
-import static ffx.potential.nonbonded.SpatialDensityRegion.logger;
-import static java.util.Arrays.fill;
-
 import edu.rit.pj.IntegerForLoop;
 import edu.rit.pj.IntegerSchedule;
 import edu.rit.pj.ParallelRegion;
 import ffx.crystal.Crystal;
 import ffx.potential.bonded.Atom;
+
 import java.nio.DoubleBuffer;
 import java.util.logging.Level;
+
+import static ffx.potential.nonbonded.SpatialDensityRegion.logger;
+import static java.util.Arrays.fill;
 
 /**
  * The RowRegion class is used to parallelize placing onto a 3D grid
@@ -83,21 +84,14 @@ public class RowRegion extends ParallelRegion {
    * @param gX a int.
    * @param gY a int.
    * @param gZ a int.
-   * @param grid an array of {@link double} objects.
+   * @param grid the grid array.
    * @param nSymm a int.
    * @param threadCount a int.
    * @param atoms an array of {@link ffx.potential.bonded.Atom} objects.
-   * @param coordinates an array of {@link double} objects.
+   * @param coordinates the atomic coordinate array.
    */
-  public RowRegion(
-      int gX,
-      int gY,
-      int gZ,
-      double[] grid,
-      int nSymm,
-      int threadCount,
-      Atom[] atoms,
-      double[][][] coordinates) {
+  public RowRegion(int gX, int gY, int gZ, double[] grid,
+      int nSymm, int threadCount, Atom[] atoms, double[][][] coordinates) {
     this.nAtoms = atoms.length;
     this.gX = gX;
     this.gY = gY;
@@ -134,7 +128,7 @@ public class RowRegion extends ParallelRegion {
   /**
    * Getter for the field <code>grid</code>.
    *
-   * @return an array of {@link double} objects.
+   * @return the grid array.
    */
   public double[] getGrid() {
     return grid;

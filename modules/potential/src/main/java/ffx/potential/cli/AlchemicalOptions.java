@@ -37,20 +37,19 @@
 // ******************************************************************************
 package ffx.potential.cli;
 
-import static ffx.potential.cli.AtomSelectionOptions.actOnAtoms;
-import static java.lang.String.format;
-
 import ffx.potential.MolecularAssembly;
 import ffx.potential.bonded.Atom;
 import ffx.potential.utils.PotentialsFunctions;
-
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
-
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
 import javax.annotation.Nullable;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
+import static ffx.potential.cli.AtomSelectionOptions.actOnAtoms;
+import static ffx.potential.cli.AtomSelectionOptions.actOnResidueAtoms;
+import static java.lang.String.format;
 
 /**
  * Represents command line options for scripts that utilize alchemistry on at least one topology.
@@ -92,9 +91,12 @@ public class AlchemicalOptions {
    *
    * @param assembly        Assembly to which the atoms belong.
    * @param alchemicalAtoms Alchemical atoms selection string.
+   * @param alchemicalResidues Alchemical residues selection string.
    */
-  public static void setAlchemicalAtoms(MolecularAssembly assembly, String alchemicalAtoms) {
+  public static void setAlchemicalAtoms(MolecularAssembly assembly, String alchemicalAtoms, String alchemicalResidues) {
     actOnAtoms(assembly, alchemicalAtoms, Atom::setApplyLambda, "Alchemical");
+    // todo - doing both won't work - sets all atoms to false for subset - could remove that ?
+    actOnResidueAtoms(assembly, alchemicalResidues, Atom::setApplyLambda, "Alchemical");
   }
 
   /**
@@ -105,6 +107,13 @@ public class AlchemicalOptions {
   public String getAlchemicalAtoms() {
     return group.alchemicalAtoms;
   }
+
+  /**
+   * --acRes or --alchemicalResidues Specify alchemical residues by chain and residue number [A4,B21].
+   *
+   * @return Returns alchemical residues.
+   */
+  public String getAlchemicalResidues() { return group.alchemicalResidues; }
 
   /**
    * --uc or --unchargedAtoms Specify atoms without electrostatics [ALL, NONE, Range(s): 1-3,6-N].
@@ -184,9 +193,14 @@ public class AlchemicalOptions {
    */
   public boolean hasSoftcore() {
     String alchemicalAtoms = getAlchemicalAtoms();
-    return (alchemicalAtoms != null
+    boolean atoms = (alchemicalAtoms != null
         && !alchemicalAtoms.equalsIgnoreCase("NONE")
         && !alchemicalAtoms.equalsIgnoreCase(""));
+    String alchemicalResidues = getAlchemicalResidues();
+    boolean residues = (alchemicalResidues != null
+        && !alchemicalResidues.equalsIgnoreCase("NONE")
+        && !alchemicalResidues.equalsIgnoreCase(""));
+    return (atoms || residues);
   }
 
   /**
@@ -195,7 +209,7 @@ public class AlchemicalOptions {
    * @param topology a {@link ffx.potential.MolecularAssembly} object.
    */
   public void setFirstSystemAlchemistry(MolecularAssembly topology) {
-    setAlchemicalAtoms(topology, getAlchemicalAtoms());
+    setAlchemicalAtoms(topology, getAlchemicalAtoms(), getAlchemicalResidues());
   }
 
   /**
@@ -255,6 +269,15 @@ public class AlchemicalOptions {
   }
 
   /**
+   * Set system properties for alchemical simulations.
+   */
+  public void setAlchemicalProperties() {
+    if (hasSoftcore()) {
+      System.setProperty("lambdaterm", "true");
+    }
+  }
+
+  /**
    * Collection of Alchemical Options.
    */
   private static class AlchemicalOptionGroup {
@@ -277,6 +300,16 @@ public class AlchemicalOptions {
         defaultValue = "",
         description = "Specify alchemical atoms [ALL, NONE, Range(s): 1-3,6-N].")
     String alchemicalAtoms = "";
+
+    /**
+     * --acRes or --alchemicalResidues Specify alchemical residues by chain and residue number [A4,B21].
+     */
+    @Option(
+        names = {"--acRes", "--alchemicalResidues"},
+        paramLabel = "<selection>",
+        defaultValue = "",
+        description = "Specify alchemical residues by chain and residue number [A4,B21]")
+    String alchemicalResidues = "";
 
     /**
      * --uc or --unchargedAtoms Specify atoms without electrostatics [ALL, NONE, Range(s):

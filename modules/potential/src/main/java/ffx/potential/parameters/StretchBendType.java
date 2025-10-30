@@ -101,8 +101,8 @@ public final class StretchBendType extends BaseType implements Comparator<String
   /**
    * StretchBendType Constructor.
    *
-   * @param atomClasses    int[]
-   * @param forceConstants double[]
+   * @param atomClasses    the atom classes for this stretch-bend type.
+   * @param forceConstants the force constants for this stretch-bend type.
    */
   public StretchBendType(int[] atomClasses, double[] forceConstants) {
     super(STRBND, sortKey(copyOf(atomClasses, 3)));
@@ -120,12 +120,12 @@ public final class StretchBendType extends BaseType implements Comparator<String
   }
 
   /**
-   * average.
+   * Average two StretchBendType instances.
    *
-   * @param stretchBendType1 a {@link ffx.potential.parameters.StretchBendType} object.
-   * @param stretchBendType2 a {@link ffx.potential.parameters.StretchBendType} object.
-   * @param atomClasses      an array of {@link int} objects.
-   * @return a {@link ffx.potential.parameters.StretchBendType} object.
+   * @param stretchBendType1 The first StretchBendType.
+   * @param stretchBendType2 The second StretchBendType.
+   * @param atomClasses      The atom classes for the new StretchBendType.
+   * @return A new StretchBendType with averaged force constants, or null if inputs are invalid.
    */
   public static StretchBendType average(StretchBendType stretchBendType1,
                                         StretchBendType stretchBendType2, int[] atomClasses) {
@@ -330,8 +330,8 @@ public final class StretchBendType extends BaseType implements Comparator<String
     node.setAttribute("class2", format("%d", atomClasses[1]));
     node.setAttribute("class3", format("%d", atomClasses[2]));
     // Convert kcal/mol/A-degrees to KJ/mol/nm-radians
-    node.setAttribute("k1", format("%f", forceConstants[0] * KCAL_TO_KJ / (ANG_TO_NM * DEGREES_PER_RADIAN)));
-    node.setAttribute("k2", format("%f", forceConstants[1] * KCAL_TO_KJ / (ANG_TO_NM * DEGREES_PER_RADIAN)));
+    node.setAttribute("k1", format("%.17f", forceConstants[0] * KCAL_TO_KJ / (ANG_TO_NM * DEGREES_PER_RADIAN)));
+    node.setAttribute("k2", format("%.17f", forceConstants[1] * KCAL_TO_KJ / (ANG_TO_NM * DEGREES_PER_RADIAN)));
     return node;
   }
 }

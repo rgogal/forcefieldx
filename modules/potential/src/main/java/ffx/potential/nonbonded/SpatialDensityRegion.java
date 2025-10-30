@@ -37,18 +37,19 @@
 // ******************************************************************************
 package ffx.potential.nonbonded;
 
-import static java.lang.String.format;
-import static java.util.Arrays.fill;
-import static org.apache.commons.math3.util.FastMath.floor;
-
 import edu.rit.pj.IntegerForLoop;
 import edu.rit.pj.IntegerSchedule;
 import edu.rit.pj.ParallelRegion;
 import ffx.crystal.Crystal;
 import ffx.potential.bonded.Atom;
+
 import java.nio.DoubleBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.lang.String.format;
+import static java.util.Arrays.fill;
+import static org.apache.commons.math3.util.FastMath.floor;
 
 /**
  * This class implements a spatial decomposition based on partitioning a grid into octants.
@@ -186,7 +187,6 @@ public class SpatialDensityRegion extends ParallelRegion {
       Crystal crystal,
       Atom[] atoms,
       double[][][] coordinates) {
-    this.crystal = crystal.getUnitCell();
     this.coordinates = coordinates;
     this.nSymm = nSymm;
     this.nAtoms = atoms.length;
@@ -450,8 +450,12 @@ public class SpatialDensityRegion extends ParallelRegion {
    * @param gZ a int.
    */
   public final void setCrystal(Crystal crystal, int gX, int gY, int gZ) {
-    this.crystal = crystal.getUnitCell();
+    // If the crystal is unchanged, return.
+    if (this.crystal != null && this.crystal.equals(crystal.getUnitCell())) {
+      return;
+    }
 
+    this.crystal = crystal.getUnitCell();
     if (xf == null || xf.length < nAtoms) {
       xf = new double[nAtoms];
       yf = new double[nAtoms];

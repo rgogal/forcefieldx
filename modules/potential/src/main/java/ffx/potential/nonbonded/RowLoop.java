@@ -38,6 +38,7 @@
 package ffx.potential.nonbonded;
 
 import edu.rit.pj.IntegerForLoop;
+
 import java.util.ArrayList;
 
 /**
@@ -75,11 +76,11 @@ public abstract class RowLoop extends IntegerForLoop {
   }
 
   /**
-   * checkList.
+   * Check if the list is valid for the given zAtListBuild and buff.
    *
-   * @param zAtListBuild an array of {@link int} objects.
-   * @param buff a int.
-   * @return a boolean.
+   * @param zAtListBuild the list of zAtListBuild.
+   * @param buff the buffer size.
+   * @return true if the list is valid, false otherwise.
    */
   public boolean checkList(int[][][] zAtListBuild, int buff) {
     return false;
@@ -111,7 +112,7 @@ public abstract class RowLoop extends IntegerForLoop {
   /**
    * saveZYValues.
    *
-   * @param zAtListBuild an array of {@link int} objects.
+   * @param zAtListBuild the list of zAtListBuild.
    */
   public void saveZYValues(int[][][] zAtListBuild) {}
 

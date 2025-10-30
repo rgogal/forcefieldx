@@ -37,20 +37,21 @@
 // ******************************************************************************
 package ffx.potential.bonded;
 
-import java.io.Serial;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Objects;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
 import org.jogamp.java3d.BranchGroup;
 import org.jogamp.java3d.Canvas3D;
 import org.jogamp.java3d.J3DGraphics2D;
 import org.jogamp.java3d.Material;
 import org.jogamp.java3d.Node;
 import org.jogamp.vecmath.Color3f;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+import java.io.Serial;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * The MSNode class forms the basic unit that all data classes extend.
@@ -277,7 +278,11 @@ public class MSNode extends DefaultMutableTreeNode implements ROLS {
     return getList(ImproperTorsion.class);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Returns a List of all MSNodes below the present MSNode.
+   *
+   * @return a {@link java.util.List} object.
+   */
   public <T extends TreeNode> List<T> getList(Class<T> c) {
     return getList(c, new ArrayList<>());
   }

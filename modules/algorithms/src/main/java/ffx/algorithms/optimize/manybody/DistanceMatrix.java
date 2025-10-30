@@ -61,7 +61,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.lang.String.format;
-import static java.util.Arrays.fill;
 import static org.apache.commons.math3.util.FastMath.min;
 import static org.apache.commons.math3.util.FastMath.sqrt;
 
@@ -474,7 +473,7 @@ public class DistanceMatrix {
       }
     }
 
-    NeighborList neighborList = new NeighborList(null, crystal, atoms, nlistCutoff, 0.0, parallelTeam);
+    NeighborList neighborList = new NeighborList(crystal, atoms, nlistCutoff, 0.0, parallelTeam);
 
     // Expand coordinates
     double[][] xyz = new double[nSymm][3 * numResidues];
@@ -499,12 +498,10 @@ public class DistanceMatrix {
 
     // Build the residue neighbor-list.
     int[][][] lists = new int[nSymm][numResidues][];
-    boolean[] use = new boolean[numResidues];
-    fill(use, true);
     boolean forceRebuild = true;
     boolean printLists = false;
     long neighborTime = -System.nanoTime();
-    neighborList.buildList(xyz, lists, use, forceRebuild, printLists);
+    neighborList.buildList(xyz, lists, null, forceRebuild, printLists);
 
     neighborTime += System.nanoTime();
     logger.info(format(" Built residue neighbor list:           %8.3f sec", neighborTime * 1.0e-9));

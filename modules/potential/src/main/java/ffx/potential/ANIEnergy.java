@@ -37,17 +37,17 @@
 // ******************************************************************************
 package ffx.potential;
 
-import static edu.uiowa.torchani.TorchANILibrary.ctorch;
-import static ffx.utilities.Constants.HARTREE_TO_KCAL_PER_MOL;
-
 import com.sun.jna.NativeLong;
+import edu.uiowa.torchani.TorchANIUtils;
 import ffx.numerics.Potential;
 import ffx.potential.bonded.Atom;
 import ffx.potential.bonded.LambdaInterface;
-
-import edu.uiowa.torchani.TorchANIUtils;
 import ffx.potential.parameters.ForceField;
+
 import java.util.logging.Logger;
+
+import static edu.uiowa.torchani.TorchANILibrary.ctorch;
+import static ffx.utilities.Constants.HARTREE_TO_KCAL_PER_MOL;
 
 public class ANIEnergy implements Potential, LambdaInterface {
 
@@ -136,6 +136,12 @@ public class ANIEnergy implements Potential, LambdaInterface {
   public double[] getCoordinates(double[] parameters) {
     ForceFieldEnergy forceFieldEnergy = molecularAssembly.getPotentialEnergy();
     return forceFieldEnergy.getCoordinates(parameters);
+  }
+
+  @Override
+  public void setCoordinates(double[] parameters) {
+    ForceFieldEnergy forceFieldEnergy = molecularAssembly.getPotentialEnergy();
+    forceFieldEnergy.setCoordinates(parameters);
   }
 
   @Override

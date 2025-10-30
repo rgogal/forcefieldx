@@ -41,6 +41,7 @@ import ffx.utilities.FFXProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -111,15 +112,16 @@ public final class AngleTorsionType extends BaseType implements Comparator<Strin
   }
 
   /**
-   * average.
+   * Average two AngleTorsionType instances.
    *
-   * @param angleTorsionType1 a {@link ffx.potential.parameters.AngleTorsionType} object.
-   * @param angleTorsionType2 a {@link ffx.potential.parameters.AngleTorsionType} object.
-   * @param atomClasses       an array of {@link int} objects.
-   * @return a {@link ffx.potential.parameters.AngleTorsionType} object.
+   * @param angleTorsionType1 First AngleTorsionType.
+   * @param angleTorsionType2 Second AngleTorsionType.
+   * @param atomClasses       Atom classes for the averaged type.
+   * @return A new AngleTorsionType with averaged force constants, or null if inputs are invalid.
    */
-  public static AngleTorsionType average(AngleTorsionType angleTorsionType1,
-                                         AngleTorsionType angleTorsionType2, int[] atomClasses) {
+  public static AngleTorsionType average(@Nullable AngleTorsionType angleTorsionType1,
+                                         @Nullable AngleTorsionType angleTorsionType2,
+                                         @Nullable int[] atomClasses) {
     if (angleTorsionType1 == null || angleTorsionType2 == null || atomClasses == null) {
       return null;
     }
@@ -332,12 +334,12 @@ public final class AngleTorsionType extends BaseType implements Comparator<Strin
     node.setAttribute("class2", format("%d", atomClasses[1]));
     node.setAttribute("class3", format("%d", atomClasses[2]));
     node.setAttribute("class4", format("%d", atomClasses[3]));
-    node.setAttribute("v11", format("%f", forceConstants[0] * KCAL_TO_KJ));
-    node.setAttribute("v12", format("%f", forceConstants[1] * KCAL_TO_KJ));
-    node.setAttribute("v13", format("%f", forceConstants[2] * KCAL_TO_KJ));
-    node.setAttribute("v21", format("%f", forceConstants[3] * KCAL_TO_KJ));
-    node.setAttribute("v22", format("%f", forceConstants[4] * KCAL_TO_KJ));
-    node.setAttribute("v23", format("%f", forceConstants[5] * KCAL_TO_KJ));
+    node.setAttribute("v11", format("%.17f", forceConstants[0] * KCAL_TO_KJ));
+    node.setAttribute("v12", format("%.17f", forceConstants[1] * KCAL_TO_KJ));
+    node.setAttribute("v13", format("%.17f", forceConstants[2] * KCAL_TO_KJ));
+    node.setAttribute("v21", format("%.17f", forceConstants[3] * KCAL_TO_KJ));
+    node.setAttribute("v22", format("%.17f", forceConstants[4] * KCAL_TO_KJ));
+    node.setAttribute("v23", format("%.17f", forceConstants[5] * KCAL_TO_KJ));
     return node;
   }
 }

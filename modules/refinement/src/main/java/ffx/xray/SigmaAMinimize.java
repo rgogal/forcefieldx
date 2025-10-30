@@ -37,12 +37,6 @@
 // ******************************************************************************
 package ffx.xray;
 
-import static java.lang.Double.isNaN;
-import static java.lang.String.format;
-import static java.lang.System.arraycopy;
-import static org.apache.commons.math3.util.FastMath.pow;
-import static org.apache.commons.math3.util.FastMath.sqrt;
-
 import edu.rit.pj.ParallelTeam;
 import ffx.algorithms.Terminatable;
 import ffx.crystal.Crystal;
@@ -53,8 +47,16 @@ import ffx.numerics.math.ComplexNumber;
 import ffx.numerics.optimization.LBFGS;
 import ffx.numerics.optimization.LineSearch.LineSearchResult;
 import ffx.numerics.optimization.OptimizationListener;
+
+import javax.annotation.Nullable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.lang.Double.isNaN;
+import static java.lang.String.format;
+import static java.lang.System.arraycopy;
+import static org.apache.commons.math3.util.FastMath.pow;
+import static org.apache.commons.math3.util.FastMath.sqrt;
 
 /**
  * SigmaAMinimize class.
@@ -137,10 +139,10 @@ public class SigmaAMinimize implements OptimizationListener, Terminatable {
   /**
    * getCoordinates.
    *
-   * @param x an array of {@link double} objects.
-   * @return an array of {@link double} objects.
+   * @param x the array to populate with parameters or null to create a new array.
+   * @return an array containing the parameters.
    */
-  public double[] getCoordinates(double[] x) {
+  public double[] getCoordinates(@Nullable double[] x) {
     if (x == null) {
       x = new double[this.x.length];
     }

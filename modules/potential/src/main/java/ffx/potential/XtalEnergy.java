@@ -44,9 +44,7 @@ import ffx.potential.MolecularAssembly.FractionalMode;
 import ffx.potential.bonded.Atom;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 
 import static org.apache.commons.math3.util.FastMath.toDegrees;
 
@@ -608,7 +606,8 @@ public class XtalEnergy implements Potential {
    *
    * @param x First 3*nActive parameters are coordinates, next 6 are x parameters.
    */
-  private void setCoordinates(double[] x) {
+  @Override
+  public void setCoordinates(double[] x) {
     assert (x != null);
 
     // Before applying new lattice parameters, store factional coordinates.
@@ -715,4 +714,5 @@ public class XtalEnergy implements Potential {
       }
     }
   }
+
 }
