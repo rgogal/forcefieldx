@@ -119,6 +119,7 @@ public class GenZpKa extends AlgorithmsCommand {
     }
     // Set the energy cutoff for permutations to include in the ensemble
     System.setProperty("ro-ensembleEnergy", ensembleEnergy);
+    System.setProperty("standardizeAtomNames", "false");
 
     // Load the MolecularAssembly.
     activeAssembly = getActiveAssembly(filename);
@@ -305,10 +306,11 @@ public class GenZpKa extends AlgorithmsCommand {
     }
 
     // Save the pdb file with the most popular rotamers for all residues included in the partition function
-    System.setProperty("standardizeAtomNames", "false");
+
     File modelFile = saveDirFile(activeAssembly.getFile());
     PDBFilter pdbFilter = new PDBFilter(modelFile, activeAssembly, activeAssembly.getForceField(),
             activeAssembly.getProperties());
+
     if (manyBodyOptions.getTitration()) {
       String remark = format("Titration pH: %6.3f", titrationPH);
       if (!pdbFilter.writeFile(modelFile, false, excludeAtoms, true, true, new String[]{remark})) {
