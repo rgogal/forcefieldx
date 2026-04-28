@@ -194,7 +194,7 @@ public class GenZpKa extends AlgorithmsCommand {
     titrationManyBody = new TitrationManyBody(filename, activeAssembly.getForceField(),
             resNumberList, titrationPH, manyBodyOptions);
     MolecularAssembly protonatedAssembly = titrationManyBody.getProtonatedAssembly();
-    setActiveAssembly(protonatedAssembly);
+    activeAssembly = protonatedAssembly;
     potentialEnergy = protonatedAssembly.getPotentialEnergy();
 
 

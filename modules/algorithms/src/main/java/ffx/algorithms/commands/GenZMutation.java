@@ -260,7 +260,7 @@ public class GenZMutation extends AlgorithmsCommand {
           titrationManyBody = new TitrationManyBody(filename, activeAssembly.getForceField(),
                   resNumberList, manyBodyOptions.getTitrationPH(), manyBodyOptions);
           MolecularAssembly protonatedAssembly = titrationManyBody.getProtonatedAssembly();
-          setActiveAssembly(protonatedAssembly);
+          activeAssembly = protonatedAssembly;
           potentialEnergy = protonatedAssembly.getPotentialEnergy();
         }
 
